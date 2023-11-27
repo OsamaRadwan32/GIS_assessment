@@ -17,24 +17,5 @@ def connect_to_db():
     )
     return conn
 
-@app.route('/')
-def index():
-    try:
-        conn = connect_to_db()
-        cur = conn.cursor()
-        cur.execute('SELECT version()')
-        db_version = cur.fetchone()
-        cur.close()
-        conn.close()
-        return f'PostgreSQL Database Version: {db_version}'
-    except Exception as e:
-        return f"Error: {e}"
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['DEBUG'] = os.getenv('DEBUG')
