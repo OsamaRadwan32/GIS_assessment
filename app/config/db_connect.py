@@ -13,7 +13,6 @@ def connect_to_db():
         user=os.getenv('USERNAME'),
         password=os.getenv('PASSWORD'),
         host=os.getenv('HOST'),
-        port=os.getenv('PORT')
     )
     return conn
 

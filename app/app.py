@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from app.config.db_connect import connect_to_db
+from config.db_connect import connect_to_db
 app = Flask(__name__)
 
 
