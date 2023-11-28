@@ -1,12 +1,12 @@
 import os
 from flask import Flask
 from config.db_connect import connect_to_db
+from routes.index_routes import main_routes
+
 app = Flask(__name__)
 
-
-@app.route('/')
-def homepage():
-    return 'Homepage'
+# Register Blueprints (routes)
+app.register_blueprint(main_routes)
 
 @app.route('/dbConnect')
 def db_connection():
@@ -20,23 +20,6 @@ def db_connection():
         return f'PostgreSQL Database Version: {db_version}'
     except Exception as e:
         return f"Error: {e}"
-
-@app.route('/users')
-def get_users():
-    return 'Users'
-
-@app.route('/users/<int:user_id>')
-def get_user(user_id):
-    return f'Returning user of id: {user_id}'
-
-
-@app.route('/tables')
-def get_tables():
-    return 'Tables'
-
-@app.route('/tables/<int:table_id>')
-def get_table(table_id):
-    return f'Returning table of id: {table_id}'
 
 if __name__ == '__main__':
  with app.test_request_context():
