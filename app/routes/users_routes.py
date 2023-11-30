@@ -1,18 +1,18 @@
 from flask import Blueprint, jsonify
 
-content_routes = Blueprint('content_routes', __name__)
+user_routes = Blueprint('user_routes', __name__)
 
-@content_routes.route('/update/<int:table_id>/<int:row_id>', methods=['PUT'])
+@user_routes.route('/update/<int:table_id>/<int:row_id>', methods=['PUT'])
 def update_row(table_id, row_id):
     # update_row = content_controller.update_row(table_id, row_id) 
     # return update_row
-    return jsonify({'message': 'Update row route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
+    return jsonify({'message': 'Update user route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
 
-@content_routes.route('/delete/<int:table_id>/<int:row_id>', methods=['DELETE'])
+@user_routes.route('/delete/<int:table_id>/<int:row_id>', methods=['DELETE'])
 def delete_row(table_id, row_id):
     # delete_row = content_controller.delete_row(table_id, row_id) 
     # return delete_row
-    return jsonify({'message': 'Delete row route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
+    return jsonify({'message': 'Delete user route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
 
 
 from flask import request

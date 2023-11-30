@@ -5,8 +5,9 @@ import os
 
 load_dotenv()
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
+# Normal database connection
 def connect_to_db():
     conn = psycopg2.connect(
         dbname=os.getenv('DATABASE'),

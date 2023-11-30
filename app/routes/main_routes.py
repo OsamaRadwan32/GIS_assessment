@@ -2,8 +2,8 @@
 from flask import Blueprint, jsonify
 
 from .content_routes import content_routes
-from .table_routes import table_routes
-from .user_routes import user_routes
+from .tables_routes import table_routes
+from .users_routes import user_routes
 
 # Create a Blueprint instance
 main_routes = Blueprint('main_routes', __name__)
@@ -35,5 +35,5 @@ def get_table(table_id):
     return f'Returning table of id: {table_id}'
 
 main_routes.register_blueprint(content_routes, url_prefix='/content')
-main_routes.register_blueprint(table_routes, url_prefix='/table')
-main_routes.register_blueprint(user_routes, url_prefix='/user')
+main_routes.register_blueprint(table_routes, url_prefix='/tables')
+main_routes.register_blueprint(user_routes, url_prefix='/users')
