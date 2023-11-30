@@ -1,11 +1,11 @@
 from flask import Blueprint, jsonify
 
-about_subroutes = Blueprint('about_subroutes', __name__)
+user_routes = Blueprint('user_routes', __name__)
 
-@about_subroutes.route('/info')
+@user_routes.route('/info')
 def about_info():
     return jsonify({'message': 'About Info page'})
 
-@about_subroutes.route('/contact')
+@user_routes.route('/contact')
 def about_contact():
     return jsonify({'message': 'About Contact page'})
