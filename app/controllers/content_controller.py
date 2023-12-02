@@ -24,7 +24,7 @@ from flask import request, jsonify
 import uuid
 
 from .. import db
-from .models import Account
+from ..models import content_model
 
 # ----------------------------------------------- #
 

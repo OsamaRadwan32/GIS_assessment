@@ -1,8 +1,36 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+from sqlalchemy import MetaData, Table, Column, Integer, String
+
+import uuid
+from .. import app, db
+from ..models import tables_model
 
 user_bp = Blueprint('user_bp', __name__)
 
 class TableController:
+    @staticmethod
+    def create_table(table_name):
+        if not request.json:
+            return jsonify({'error': 'No data provided'}), 400
+
+        columns = request.json.get('columns')
+        datatypes = request.json.get('datatypes')
+
+        if not columns or not datatypes:
+            return jsonify({'error': 'Columns or datatypes missing'}), 400
+
+        if len(columns) != len(datatypes):
+            return jsonify({'error': 'Mismatch in columns and datatypes'}), 400
+
+        try:
+            metadata = MetaData()
+            new_table = Table(f'{table_name}', metadata, *[Column(col, getattr(Integer, dtype)) for col, dtype in zip(columns, datatypes)])
+            new_table.create(bind=db.engine)
+            return jsonify({'message': 'Table created successfully'}), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+
     @staticmethod
     @user_bp.route('/users', methods=['GET'])
     def get_users():
@@ -20,13 +48,6 @@ class TableController:
 
 # Additional routes can be added in a similar manner in post_controller.py or other controller files.
 
-
-from flask import request, jsonify
-import uuid
-
-from .. import db
-from .models import Account
-
 # ----------------------------------------------- #
 
 # Query Object Methods => https://docs.sqlalchemy.org/en/14/orm/query.html#sqlalchemy.orm.Query
@@ -34,7 +55,7 @@ from .models import Account
 # How to serialize SqlAlchemy PostgreSQL Query to JSON => https://stackoverflow.com/a/46180522
 
 def list_all_accounts_controller():
-    accounts = Account.query.all()
+    accounts = table_model.query.all()
     response = []
     for account in accounts: response.append(account.toDict())
     return jsonify(response)
@@ -47,8 +68,6 @@ def create_account_controller():
                           id             = id,
                           email          = request_form['email'],
                           username       = request_form['username'],
-                          dob            = request_form['dob'],
-                          country        = request_form['country'],
                           phone_number   = request_form['phone_number'],
                           )
     db.session.add(new_account)

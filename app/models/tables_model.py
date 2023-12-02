@@ -8,7 +8,7 @@ from .. import db # from __init__.py
 # ----------------------------------------------- #
 
 # SQL Datatype Objects => https://docs.sqlalchemy.org/en/14/core/types.html
-class Account(db.Model):
+class Table(db.Model):
 # Auto Generated Fields:
     id           = db.Column(db.String(50), primary_key=True, nullable=False, unique=True)
     created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           # The Date of the Instance Creation => Created one Time when Instantiation

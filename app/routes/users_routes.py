@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
+from ..controllers import user_controller
 
 user_routes = Blueprint('user_routes', __name__)
 
@@ -15,18 +16,14 @@ def delete_row(table_id, row_id):
     return jsonify({'message': 'Delete user route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
 
 
-from flask import request
-
-from ..app import app
-from .controllers import list_all_accounts_controller, create_account_controller, retrieve_account_controller, update_account_controller, delete_account_controller
-
-@app.route("/accounts", methods=['GET', 'POST'])
+# Boiler plate methods
+@user_routes.route("/accounts", methods=['GET', 'POST'])
 def list_create_accounts():
     if request.method == 'GET': return list_all_accounts_controller()
     if request.method == 'POST': return create_account_controller()
     else: return 'Method is Not Allowed'
 
-@app.route("/accounts/<account_id>", methods=['GET', 'PUT', 'DELETE'])
+@user_routes.route("/accounts/<account_id>", methods=['GET', 'PUT', 'DELETE'])
 def retrieve_update_destroy_accounts(account_id):
     if request.method == 'GET': return retrieve_account_controller(account_id)
     if request.method == 'PUT': return update_account_controller(account_id)

@@ -1,4 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
+import uuid
+from .. import db
+from ..models import users_models
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -19,13 +22,6 @@ class UserController:
     # For example, POST, PUT, DELETE methods
 
 # Additional routes can be added in a similar manner in post_controller.py or other controller files.
-
-
-from flask import request, jsonify
-import uuid
-
-from .. import db
-from .models import Account
 
 # ----------------------------------------------- #
 
