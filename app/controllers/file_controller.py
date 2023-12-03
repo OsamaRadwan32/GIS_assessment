@@ -18,5 +18,3 @@ class FileController:
             return jsonify({'columns': column_names}), 200
 
         return jsonify({'error': 'Unknown error occurred'}), 500
-
-    
