@@ -3,17 +3,17 @@ from ..controllers import user_controller
 
 user_routes = Blueprint('user_routes', __name__)
 
-@user_routes.route('/update/<int:table_id>/<int:row_id>', methods=['PUT'])
-def update_row(table_id, row_id):
+@user_routes.route('/<int:user_id>/', methods=['PUT'])
+def update_row(user_id):
     # update_row = content_controller.update_row(table_id, row_id) 
     # return update_row
-    return jsonify({'message': 'Update user route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
+    return jsonify({'message': 'Update user route', 'table_id': f'{user_id}'})
 
-@user_routes.route('/delete/<int:table_id>/<int:row_id>', methods=['DELETE'])
-def delete_row(table_id, row_id):
+@user_routes.route('/delete/<int:user_id>/', methods=['DELETE'])
+def delete_row(user_id):
     # delete_row = content_controller.delete_row(table_id, row_id) 
     # return delete_row
-    return jsonify({'message': 'Delete user route', 'table_id': f'{table_id}', 'row_id': f'{row_id}'})
+    return jsonify({'message': 'Delete user route', 'user_id': f'{user_id}'})
 
 
 # Boiler plate methods

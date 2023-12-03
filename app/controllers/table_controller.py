@@ -5,7 +5,7 @@ import uuid
 from .. import app, db
 from ..models import tables_model
 
-user_bp = Blueprint('user_bp', __name__)
+table_bp = Blueprint('table_bp', __name__)
 
 class TableController:
     @staticmethod
@@ -32,13 +32,13 @@ class TableController:
 
 
     @staticmethod
-    @user_bp.route('/users', methods=['GET'])
+    @table_bp.route('/users', methods=['GET'])
     def get_users():
         # Logic to fetch users from the database
         return 'List of users'
 
     @staticmethod
-    @user_bp.route('/user/<int:user_id>', methods=['GET'])
+    @table_bp.route('/user/<int:user_id>', methods=['GET'])
     def get_user(user_id):
         # Logic to fetch a single user based on user_id
         return f'User with ID {user_id}'
