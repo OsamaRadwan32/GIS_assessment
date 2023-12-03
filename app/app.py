@@ -9,6 +9,7 @@ from . import create_app, db_connection # from __init__ file
 app = create_app()
 
 if __name__ == "__main__":
+    db.create_all()  # Create tables based on models
     app.run()
 
 # Register Blueprints (routes)

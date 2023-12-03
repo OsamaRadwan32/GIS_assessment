@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 from .. import db
 from ..models.users_models import User
@@ -26,11 +27,15 @@ class UserController:
         request_form = request.form.to_dict()
 
         id = str(uuid.uuid4())
+
+        # Encrypting the password
+        hashed_password = generate_password_hash(request_form['password'])
+
         new_user = User(
                             id             = id,
                             email          = request_form['email'],
                             username       = request_form['username'],
-                            password       = request_form['password'],
+                            password       = hashed_password,
                             )
         db.session.add(new_user)
         db.session.commit()
@@ -57,3 +62,12 @@ class UserController:
         db.session.commit()
 
         return ('User with Id "{}" deleted successfully!').format(user_id)
+
+
+    # @staticmethod
+    # def login():
+        # # Checking if the password matches (for login or verification)
+        # is_password_correct = check_password_hash(hashed_password, password)
+
+    # @staticmethod
+    # def logout():

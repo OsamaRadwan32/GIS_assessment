@@ -9,8 +9,10 @@ from .. import db # from __init__.py
 
 # SQL Datatype Objects => https://docs.sqlalchemy.org/en/14/core/types.html
 class User(db.Model):
+    __tablename__ = 'users'
+
 # Auto Generated Fields:
-    id           = db.Column(db.String(50), primary_key=True, nullable=False, unique=True)
+    id           = db.Column(db.String, primary_key=True, nullable=False, unique=True)
     created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           # The Date of the Instance Creation => Created one Time when Instantiation
     updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)    # The Date of the Instance Update => Changed with Every Update
 
@@ -23,9 +25,9 @@ class User(db.Model):
 # Validations => https://flask-validator.readthedocs.io/en/latest/index.html
     @classmethod
     def __declare_last__(cls):
-        ValidateEmail(Account.email, True, True, "The email is not valid. Please check it") # True => Allow internationalized addresses, True => Check domain name resolution.
-        ValidateString(Account.username, True, True, "The username type must be string")
-        ValidateString(Account.country, True, True, "The password is not valid")
+        ValidateEmail(User.email, True, True, "The email is not valid. Please check it") # True => Allow internationalized addresses, True => Check domain name resolution.
+        ValidateString(User.username, True, True, "The username type must be string")
+        ValidateString(User.password, True, True, "The password is not valid")
 
 
 # Set an empty string to null for username field => https://stackoverflow.com/a/57294872
