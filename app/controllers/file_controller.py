@@ -21,29 +21,30 @@ class FileController:
             return jsonify({'error': 'No file provided or wrong file extension!'}), 400
         
         # Save the file in the desired location
-        uploaded_file.save(uploaded_file.filename)
         TableController.create_table_record(table_name, 1, table_structure)
         TableController.create_table(table_name, table_structure)
-        FileController.populate_table(table_name, uploaded_file)
+        FileController.populate_table(table_name, table_structure, uploaded_file)
+
         return jsonify({'message': 'Table created and populated successfully'}), 200
 
     @staticmethod
-    def populate_table(table_name, csv_file):        
-        stream = io.StringIO(csv_file.stream.read().decode("UTF8"), newline=None)
-        csv_reader = csv.reader(stream)
-        next(csv_reader)  # Skip header row if exists
+    def populate_table(table_name, table_structure, csv_file):        
+        TableModel = db.Model.metadata.tables.get(table_name)
         
-        try:
-            for row in csv_reader:
-                # Assuming columns are in the order: col1, col2, col3, etc.
-                new_row = YourTable(col1=row[0], col2=row[1], col3=row[2])  # Replace col1, col2, col3 with your actual column names
-                db.session.add(new_row)
-            
-            db.session.commit()
-            return "CSV data inserted into the database successfully"
-        except Exception as e:
-            db.session.rollback()
-            return f"Failed to insert CSV data: {str(e)}", 500
-        finally:
-            db.session.close()
+        if not TableModel:
+            return jsonify({"error": "Table does not exist"}), 404
 
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.DictReader(file)
+            data = [{col: row[col] for col in columns} for row in csv_reader]
+
+            try:
+                db.session.execute(YourTable.insert().values(data))
+                db.session.commit()
+                return jsonify({"message": f"Data inserted into the table '{table_name}' successfully"})
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({"message": f"Failed to insert CSV data: {str(e)}"}), 500
+            finally:
+                db.session.close()
+                
