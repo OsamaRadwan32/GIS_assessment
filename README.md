@@ -2,7 +2,7 @@
 
 ## Postgres
 
-1- Access postgres using the following command
+Access postgres using the following command
 
 ```
 sudo -i -u postgres
@@ -10,7 +10,7 @@ sudo -i -u postgres
 psql
 ```
 
-2- Copy and paste the code below and run it in the terminal to create the database tables
+Copy and paste the code below and run it in the terminal to create the database tables
 
 ```
 -- Create the gis_assessment database
@@ -42,6 +42,13 @@ structure JSONB
 
 ## Backend
 
+Create a virtual environment
+
+```
+pip install virtualenv
+python<version> -m venv .venv
+```
+
 Activate the virtual environment
 
 ```
@@ -66,6 +73,10 @@ Run the app
 flask run --debug
 ```
 
+The code wasn't finalized to cover all the requirements; But it is structured as follows: - The models folder containing user, table, and dynamic table model files - Controller folder containing user, table file and authentication controller - Routes folder containing main, user, table, file and authentication routes
+
+The finalized API routes could be found in a postman json exported file found in app/static directory
+
 ## Frontend
 
 When in projects main directory change directory to access the react app
@@ -85,3 +96,5 @@ Run the react app
 ```
 npm start
 ```
+
+Note that the code only contains components without integrating them with the backend
