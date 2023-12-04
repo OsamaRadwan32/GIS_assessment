@@ -12,14 +12,14 @@ class User(db.Model):
     __tablename__ = 'users'
 
 # Auto Generated Fields:
-    id           = db.Column(db.String, primary_key=True, nullable=False, unique=True)
+    id           = db.Column(db.Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           # The Date of the Instance Creation => Created one Time when Instantiation
     updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)    # The Date of the Instance Update => Changed with Every Update
 
 # Input by User Fields:
     email        = db.Column(db.String(100), nullable=False, unique=True)
     username     = db.Column(db.String(100), nullable=False)
-    password     = db.Column(db.String(20))
+    password     = db.Column(db.String(200))
 
 
 # Validations => https://flask-validator.readthedocs.io/en/latest/index.html

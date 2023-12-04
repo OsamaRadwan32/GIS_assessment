@@ -7,6 +7,7 @@ from ..models.users_models import User
 user_bp = Blueprint('user_bp', __name__)
 
 class UserController:
+
     @staticmethod
     def get_users():
         users = User.query.all()
@@ -16,32 +17,38 @@ class UserController:
 
     @staticmethod
     def get_user(user_id):
-        response = User.query.get(user_id).toDict()
-        return jsonify(response)
+        response = User.query.get(user_id)
+        if response is not None:
+            return response.toDict()
+        return jsonify({'message': 'User not found'}), 404
 
-        # Logic to fetch a single user based on user_id
-        return f'User with ID {user_id}'
+    @staticmethod
+    def find_user_by_email(email):
+        response = User.query.filter_by(email=email).first()
+        return response
 
     @staticmethod
     def create_user(request):
         request_form = request.form.to_dict()
 
-        id = str(uuid.uuid4())
+        user = UserController.find_user_by_email(request_form['email'])
+
+        if user is not None:
+            return jsonify({'message': 'User already exists'})
 
         # Encrypting the password
         hashed_password = generate_password_hash(request_form['password'])
 
         new_user = User(
-                            id             = id,
-                            email          = request_form['email'],
-                            username       = request_form['username'],
-                            password       = hashed_password,
-                            )
+                        email          = request_form['email'],
+                        username       = request_form['username'],
+                        password       = hashed_password,
+                        )
         db.session.add(new_user)
         db.session.commit()
 
-        response = User.query.get(id).toDict()
-        return jsonify(response)
+        response = User.query.filter_by(email=request_form['email']).first()
+        return response.toDict()
         
     @staticmethod
     def update_user(user_id):
@@ -58,16 +65,9 @@ class UserController:
 
     @staticmethod
     def delete_user(user_id):
-        User.query.filter_by(id=user_id).delete()
-        db.session.commit()
-
-        return ('User with Id "{}" deleted successfully!').format(user_id)
-
-
-    # @staticmethod
-    # def login():
-        # # Checking if the password matches (for login or verification)
-        # is_password_correct = check_password_hash(hashed_password, password)
-
-    # @staticmethod
-    # def logout():
+        user = User.query.get(user_id)
+        if user is not None:
+            User.query.filter_by(id=user_id).delete()
+            db.session.commit()
+            return jsonify({'message': f'User with id {user_id} deleted successfully!'})
+        return jsonify({'message': 'Failed to delete record or not found!'})

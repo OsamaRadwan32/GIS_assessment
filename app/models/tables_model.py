@@ -14,14 +14,14 @@ class Table(db.Model):
     __tablename__ = 'tables'
 
 # Auto Generated Fields:
-    id           = db.Column(db.String, primary_key=True, nullable=False, unique=True)
-    created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           # The Date of the Instance Creation => Created one Time when Instantiation
-    updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)    # The Date of the Instance Update => Changed with Every Update
+    id           = db.Column(db.Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
+    created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           
+    updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)
 
 # Input by User Fields:
     name         = db.Column(db.String(100), nullable=False, unique=True)
-    user_id      = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
-
+    user_id      = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    structure    = db.Column(db.JSONB, nullable=False)
     user         = db.relationship('User', backref='users', lazy=True)
 
 
