@@ -14,14 +14,17 @@ class FileController:
         table_name = request_form['table_name']
         table_structure = request_form['table_structure']
         file_name = request_form['file_name']
-        uploaded_file = request.files[f'{file_name}']
+        uploaded_file = request.files['file']
+
+        # if file_name not in request.files:
+        #     return jsonify({'error': 'No file part'}), 400
         
         # Check if the uploaded file exists and has a CSV extension
         if not uploaded_file.filename or not uploaded_file.filename.endswith('.csv'):
             return jsonify({'error': 'No file provided or wrong file extension!'}), 400
         
         # Save the file in the desired location
-        TableController.create_table_record(table_name, 1, table_structure)
+        TableController.create_table_record(table_name, 3, table_structure)
         TableController.create_table(table_name, table_structure)
         FileController.populate_table(table_name, table_structure, uploaded_file)
 
@@ -47,4 +50,4 @@ class FileController:
                 return jsonify({"message": f"Failed to insert CSV data: {str(e)}"}), 500
             finally:
                 db.session.close()
-                
+

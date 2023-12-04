@@ -21,8 +21,12 @@ class TableController:
         db.session.commit()
 
     @staticmethod
-    def create_table(table_name, user_id, structure):
+    def create_table(table_name, structure):
+        print("STRUCTURE TYPE:")
+        print(type(structure))
         
+        json_structure = jsonify(structure)
+
         table_columns = {
             'id': db.Column(db.Integer, primary_key=True)
         }
