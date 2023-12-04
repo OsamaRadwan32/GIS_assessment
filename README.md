@@ -73,7 +73,10 @@ Run the app
 flask run --debug
 ```
 
-The code wasn't finalized to cover all the requirements; But it is structured as follows: - The models folder containing user, table, and dynamic table model files - Controller folder containing user, table file and authentication controller - Routes folder containing main, user, table, file and authentication routes
+The code wasn't finalized to cover all the requirements; But it is structured as follows: 
+  - The models folder containing user, table, and dynamic table model files
+  - Controller folder containing user, table file and authentication controller
+  - Routes folder containing main, user, table, file and authentication routes
 
 The finalized API routes could be found in a postman json exported file found in app/static directory
 
