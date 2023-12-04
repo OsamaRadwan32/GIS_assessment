@@ -3,6 +3,7 @@ import csv
 import pandas as pd
 
 from .. import db
+from ..models.dynamic_table_model import DynamicTable
 from .table_controller import TableController
 
 class FileController:
@@ -15,28 +16,19 @@ class FileController:
         file_name = request_form['file_name']
         uploaded_file = request.files[f'{file_name}']
         
-        if not uploaded_file.filename:
-            return jsonify({'error': 'No file provided'}), 400
+        # Check if the uploaded file exists and has a CSV extension
+        if not uploaded_file.filename or not uploaded_file.filename.endswith('.csv'):
+            return jsonify({'error': 'No file provided or wrong file extension!'}), 400
+        
         # Save the file in the desired location
         uploaded_file.save(uploaded_file.filename)
         TableController.create_table_record(table_name, 1, table_structure)
         TableController.create_table(table_name, table_structure)
-        FileController.pop
-        return 'File uploaded successfully'
-
-    # @staticmethod
-    # def populate_table(table_name, uploaded_file):
-
+        FileController.populate_table(table_name, uploaded_file)
+        return jsonify({'message': 'Table created and populated successfully'}), 200
 
     @staticmethod
-    def upload_file(request):
-        table_name = request.name
-        # Assuming 'file' is the name of the file input field in the form
-        csv_file = request.files['file']
-        
-        if not csv_file:
-            return jsonify({'error': 'No file provided'}), 400
-        
+    def populate_table(table_name, csv_file):        
         stream = io.StringIO(csv_file.stream.read().decode("UTF8"), newline=None)
         csv_reader = csv.reader(stream)
         next(csv_reader)  # Skip header row if exists
@@ -54,3 +46,4 @@ class FileController:
             return f"Failed to insert CSV data: {str(e)}", 500
         finally:
             db.session.close()
+
