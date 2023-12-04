@@ -2,6 +2,7 @@ from sqlalchemy import inspect
 from datetime import datetime
 from flask_validator import ValidateString, ValidateInteger
 from sqlalchemy.orm import validates
+from sqlalchemy.dialects.postgresql import JSONB
 
 from .. import db # from __init__.py
 
@@ -21,7 +22,7 @@ class Table(db.Model):
 # Input by User Fields:
     name         = db.Column(db.String(100), nullable=False, unique=True)
     user_id      = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    structure    = db.Column(db.JSONB, nullable=False)
+    structure    = db.Column(JSONB, nullable=False)
     user         = db.relationship('User', backref='users', lazy=True)
 
 

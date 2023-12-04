@@ -40,7 +40,7 @@ class TableController:
             table_columns[col_name] = column
 
         try:
-            table = type(table_name, (db.Model), table_columns)
+            table = type(table_name, (db.Model,), table_columns)
             db.create_all()
             return jsonify({'message': f'Table {table_name} created successfully'}), 200
         except Exception as e:

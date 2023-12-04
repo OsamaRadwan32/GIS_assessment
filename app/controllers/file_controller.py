@@ -21,10 +21,11 @@ class FileController:
         uploaded_file.save(uploaded_file.filename)
         TableController.create_table_record(table_name, 1, table_structure)
         TableController.create_table(table_name, table_structure)
+        FileController.pop
         return 'File uploaded successfully'
 
-    @staticmethod
-    def populate_table(table_name, uploaded_file):
+    # @staticmethod
+    # def populate_table(table_name, uploaded_file):
 
 
     @staticmethod
