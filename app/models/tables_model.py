@@ -14,25 +14,25 @@ from .users_models import User
 class Table(db.Model):
     __tablename__ = 'tables'
 
-# Auto Generated Fields:
+    # Auto Generated Fields:
     id           = db.Column(db.Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           
     updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)
 
-# Input by User Fields:
+    # Input by User Fields:
     name         = db.Column(db.String(100), nullable=False, unique=True)
     user_id      = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     structure    = db.Column(JSONB, nullable=False)
     user         = db.relationship('User', backref='users', lazy=True)
 
 
-# Validations => https://flask-validator.readthedocs.io/en/latest/index.html
+    # Validations => https://flask-validator.readthedocs.io/en/latest/index.html
     @classmethod
     def __declare_last__(cls):
         ValidateString(Table.name, True, True, "Table name type must be string")
         ValidateInteger(Table.user_id, True, True, "User id is not valid")
 
-# How to serialize SqlAlchemy PostgreSQL Query to JSON => https://stackoverflow.com/a/46180522
+    # How to serialize SqlAlchemy PostgreSQL Query to JSON => https://stackoverflow.com/a/46180522
     def toDict(self):
         return { c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs }
 

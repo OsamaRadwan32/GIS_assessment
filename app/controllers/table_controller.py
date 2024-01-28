@@ -9,9 +9,18 @@ from ..models.tables_model import Table
 table_bp = Blueprint('table_bp', __name__)
 
 class TableController:
-
+    '''Table controller'''
+    
     @staticmethod
-    def create_table_record(table_name, user_id, structure):
+    def add_table_info(table_name, user_id, structure):
+        """
+        Adds the info of the new table as a record in the 'tables' table
+        
+        Parameters:
+        - table_name(text): the name of the new table
+        - user_id(serial): the id of the user
+        - structure(string): the structure of the table to be created (in json format)
+        """
         table_record = Table(
                             name        = table_name,
                             user_id     = user_id,
@@ -22,6 +31,15 @@ class TableController:
 
     @staticmethod
     def create_table(table_name, structure):
+        """
+        Creates a new table in the database given the table_name and structure
+        
+        Parameters:
+        - table_name(text): the name of the new table
+        - structure(string): the structure of the table to be created (in json format)
+        """
+
+        
         print("STRUCTURE TYPE:")
         print(type(structure))
         
