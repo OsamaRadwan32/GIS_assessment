@@ -1,3 +1,5 @@
+"""users_model.py"""
+
 from sqlalchemy import inspect
 from datetime import datetime
 from flask_validator import ValidateEmail, ValidateString
@@ -9,6 +11,9 @@ from .. import db # from __init__.py
 
 # SQL Datatype Objects => https://docs.sqlalchemy.org/en/14/core/types.html
 class User(db.Model):
+    """
+    User Model Class
+    """
     __tablename__ = 'users'
 
     # Auto Generated Fields:

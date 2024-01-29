@@ -3,7 +3,6 @@
 import csv
 from flask import Flask, request, jsonify
 import pandas as pd
-
 from .. import db
 from ..models.dynamic_table_model import DynamicTable
 from .table_controller import TableController
@@ -13,8 +12,6 @@ class FileController:
     """
     File Controller class
     """
-
-
     @staticmethod
     def process_request(request):
         """
@@ -22,9 +19,9 @@ class FileController:
 
         Parameters:
         - request object containing the following attributes:
-            - table_name (string): the name of the table to create.
+            - table_name (str): the name of the table to create.
             - table_structure (json): the table structure in json format.
-            - file_name (string): the name of the uploaded file.
+            - file_name (str): the name of the uploaded file.
             - file(file): the actual uploaded file.
         """
         request_form = request.form.to_dict()
@@ -32,6 +29,7 @@ class FileController:
         table_name = request_form['table_name']
         table_structure = request_form['table_structure']
         # file_name = request_form['file_name']
+
 
         if 'file' not in request.files:
             return jsonify({'error': 'No file part'}), 400
@@ -44,9 +42,18 @@ class FileController:
 
         # Save the file in the desired location
         
-        # Creating a record of the table info in the 'tables' table
-        TableController.add_table_info(table_name, 3, table_structure)
-        TableController.create_table(table_name, table_structure)
+        # check if there is a record with the same table name in the 'tables' table
+        table_exists = TableController.get_table_by_name(table_name)
+        if not table_exists:
+            # Creating a record of the table info in the 'tables' table
+            TableController.add_table_info(table_name, 3, table_structure)
+        else:
+            return (jsonify({
+                'error': f'Unable to process request, a table of name {table_name} already'
+                'exists in the database'}),
+                400)
+
+        # TableController.create_table(table_name, table_structure)
         # FileController.populate_table(table_name, table_structure, file)
 
         return jsonify({'message': 'Table created and populated successfully'}), 200
@@ -63,9 +70,9 @@ class FileController:
         Returns:
         int: The sum of a and b.
         """        
-        TableModel = db.Model.metadata.tables.get(table_name)
+        table_model = db.Model.metadata.tables.get(table_name)
         
-        if not TableModel:
+        if not table_model:
             return jsonify({"error": "Table does not exist"}), 404
 
         with open(csv_file, 'r') as file:

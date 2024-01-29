@@ -1,3 +1,5 @@
+"""tables_model.py"""
+
 from sqlalchemy import inspect
 from datetime import datetime
 from flask_validator import ValidateString, ValidateInteger
@@ -12,6 +14,9 @@ from .users_models import User
 
 # SQL Datatype Objects => https://docs.sqlalchemy.org/en/14/core/types.html
 class Table(db.Model):
+    """
+    Table Model Class
+    """
     __tablename__ = 'tables'
 
     # Auto Generated Fields:
