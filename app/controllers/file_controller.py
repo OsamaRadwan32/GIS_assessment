@@ -1,17 +1,20 @@
 """ file_controller.py """
 
 import csv
+import os
+from ..app import app
+from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify
 import pandas as pd
 from .. import db
 from ..models.dynamic_table_model import DynamicTable
 from .table_controller import TableController
 
-
 class FileController:
     """
     File Controller class
     """
+
     @staticmethod
     def process_request(request):
         """
@@ -37,11 +40,12 @@ class FileController:
         file = request.files['file']
 
         # Check if the uploaded file exists and has a CSV extension
-        if file.filename == '' or not file.filename.endswith('.csv'):
+        if file.filename == '':
             return jsonify({'error': 'No selected file or wrong file extension!'}), 400
 
-        # Save the file in the desired location
+        # Save the file in the static/tables folder
         
+
         # check if there is a record with the same table name in the 'tables' table
         table_exists = TableController.get_table_by_name(table_name)
         if not table_exists:

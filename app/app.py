@@ -1,3 +1,5 @@
+"""app.py"""
+
 import os
 from flask import Flask, jsonify
 from .config.db_connect import connect_to_db

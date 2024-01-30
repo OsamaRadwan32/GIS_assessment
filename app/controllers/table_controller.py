@@ -1,6 +1,6 @@
 """table_controller.py"""
 
-# import uuid
+import uuid
 from flask import Blueprint, jsonify
 from .. import db
 from ..models.tables_model import Table
@@ -19,7 +19,7 @@ class TableController:
         - table_name(text): the name of the new table
         - user_id(serial): the id of the user
         - structure(string): the structure of the table to be created (in json format)
-        """        
+        """
         table_record = Table(
                             name        = table_name,
                             user_id     = user_id,

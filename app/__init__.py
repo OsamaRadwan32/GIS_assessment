@@ -1,3 +1,5 @@
+"""___init___.py"""
+
 import os
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -10,6 +12,9 @@ migrate = Migrate()
 
 # Creating app instance with SQLAlchemy database connection
 def create_app():
+    """
+    Initializing the flask app
+    """
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
     db.init_app(app)
@@ -18,6 +23,9 @@ def create_app():
 
 # Connecting to the database without SQLAlchemy
 def db_connection():
+    """
+    Connecting to the database
+    """
     try:
         conn = connect_to_db()
         cur = conn.cursor()
