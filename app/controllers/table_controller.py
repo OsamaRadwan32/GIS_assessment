@@ -9,7 +9,7 @@ table_bp = Blueprint('table_bp', __name__)
 
 class TableController:
     '''Table controller'''
-    
+        
     @staticmethod
     def add_table_info(table_name, user_id, structure):
         """
@@ -54,13 +54,13 @@ class TableController:
 
 
     @staticmethod
-    def create_table(table_name, structure):
+    def create_table_in_db(table_name, structure):
         """
         Creates a new table in the database given the table_name and structure
         
         Parameters:
-        - table_name(str): the name of the new table
-        - structure(str): the structure of the table to be created (in json format)
+            table_name(str): the name of the new table
+            structure(str): the structure of the table to be created (in json format)
         """
 
 

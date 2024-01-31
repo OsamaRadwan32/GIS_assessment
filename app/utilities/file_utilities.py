@@ -12,6 +12,12 @@ class FileUtilities:
     def allowed_file_extensions(filename):
         """
         Check the extension of the file uploaded and mak`es sure its a csv one 
+
+        Args:
+            filename (_type_): _description_
+
+        Returns:
+            _type_: _description_
         """
         # Allowed file extensions
         ALLOWED_EXTENSIONS = {'csv'}
@@ -42,7 +48,13 @@ class FileUtilities:
         return os.path.join(tables_folder_path, new_filename)
     
     def check_directory_exists(path):
-        """"""
+        """
+        Checks if a given path really exists or not
+
+        Args:
+            path (str): the path of the directory to search
+        """
+        
         if os.path.exists(path):
             print(f"The directory '{path}' exists.")
         else:
@@ -51,7 +63,15 @@ class FileUtilities:
     
     def save_uploaded_file(table_name, user_id, file):
         """
-        secures the name of the file and then saves it in the static/tables/ folder 
+        Secures the name of the file and then saves it in the static/tables/ folder
+
+        Args:
+            table_name (str): the name of the table to be created
+            user_id (int): the id of the user sending the request
+            file (file): the uploaded file
+
+        Returns:
+            _type_: _description_
         """
         # Check if the file has an allowed extension
         if file and FileUtilities.allowed_file_extensions(file.filename):

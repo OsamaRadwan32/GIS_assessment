@@ -13,18 +13,17 @@ class FileController:
     """
     File Controller class
     """
-
     @staticmethod
     def process_request(request):
         """
         Adds two numbers and returns the result.
 
         Parameters:
-        - request object containing the following attributes:
-            - table_name (str): the name of the table to create.
-            - table_structure (json): the table structure in json format.
-            - file_name (str): the name of the uploaded file.
-            - file(file): the actual uploaded file.
+            request object containing the following attributes:
+                - table_name (str): the name of the table to create.
+                - table_structure (json): the table structure in json format.
+                - file_name (str): the name of the uploaded file.
+                - file(file): the actual uploaded file.
         """
         request_form = request.form.to_dict()
 
@@ -41,9 +40,9 @@ class FileController:
 
             file = request.files['file']
 
-            uploaded_file_name = file.filename
+            file_name = file.filename
             # Check if the uploaded file exists and has a CSV extension
-            if uploaded_file_name == '':
+            if file_name == '':
                 return jsonify({'error': 'No selected file or wrong file extension!'}), 400
             
             # Save the file in the static/tables folder
@@ -54,7 +53,7 @@ class FileController:
                 ' exists in the database'}),
                 400)
 
-        # TableController.create_table(table_name, table_structure)
+        TableController.create_table_in_db(table_name, table_structure)
         # FileController.populate_table(table_name, table_structure, file)
 
         return jsonify({'message': 'Table created and populated successfully'}), 200
@@ -65,11 +64,11 @@ class FileController:
         Adds two numbers and returns the result.
 
         Parameters:
-        - a (int): The first number.
-        - b (int): The second number.
+            a (int): The first number.
+            b (int): The second number.
 
         Returns:
-        int: The sum of a and b.
+            int: The sum of a and b.
         """        
         table_model = db.Model.metadata.tables.get(table_name)
         
