@@ -47,7 +47,7 @@ class FileController:
                 return jsonify({'error': 'No selected file or wrong file extension!'}), 400
             
             # Save the file in the static/tables folder
-            FileUtilities.save_uploaded_file(3, file)
+            FileUtilities.save_uploaded_file(table_name, 3, file)
         else:
             return (jsonify({
                 'error': f'Unable to process request, a table of name {table_name} already'

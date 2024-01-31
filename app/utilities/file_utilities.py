@@ -11,13 +11,13 @@ class FileUtilities:
     """
     def allowed_file_extensions(filename):
         """
-        Check the extension of the file uploaded and makes sure its a csv one 
+        Check the extension of the file uploaded and mak`es sure its a csv one 
         """
         # Allowed file extensions
         ALLOWED_EXTENSIONS = {'csv'}
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     
-    def generate_filename(user_id, file_name):
+    def generate_filename(user_id, table_name):
         """
         Generates a name for the file that is being uploaded to the server side
 
@@ -36,7 +36,7 @@ class FileUtilities:
         
         # Custom format: Year-Month-Day Hour:Minute:Second
         formatted_datetime = current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
-        new_filename = secure_filename(f'{formatted_datetime}_id{user_id}_{file_name}')
+        new_filename = secure_filename(f'{formatted_datetime}_id{user_id}_{table_name}.csv')
         print(f"FILE NAME: {new_filename}") 
 
         return os.path.join(tables_folder_path, new_filename)
@@ -49,14 +49,14 @@ class FileUtilities:
             print(f"The directory '{path}' does not exist.")
         
     
-    def save_uploaded_file(user_id, file):
+    def save_uploaded_file(table_name, user_id, file):
         """
         secures the name of the file and then saves it in the static/tables/ folder 
         """
         # Check if the file has an allowed extension
         if file and FileUtilities.allowed_file_extensions(file.filename):
             # Generate a new name for the file to be uploaded on the server
-            upload_file = FileUtilities.generate_filename(user_id, file.filename)   
+            upload_file = FileUtilities.generate_filename(user_id, table_name)   
             # Save the file to the upload folder
             file.save(upload_file)
         else:
