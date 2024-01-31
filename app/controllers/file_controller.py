@@ -1,14 +1,13 @@
 """ file_controller.py """
 
 import csv
-import os
-from ..app import app
 from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify
 import pandas as pd
 from .. import db
 from ..models.dynamic_table_model import DynamicTable
 from .table_controller import TableController
+from ..utilities.file_utilities import FileUtilities
 
 class FileController:
     """
@@ -31,30 +30,28 @@ class FileController:
 
         table_name = request_form['table_name']
         table_structure = request_form['table_structure']
-        # file_name = request_form['file_name']
-
-
-        if 'file' not in request.files:
-            return jsonify({'error': 'No file part'}), 400
-
-        file = request.files['file']
-
-        # Check if the uploaded file exists and has a CSV extension
-        if file.filename == '':
-            return jsonify({'error': 'No selected file or wrong file extension!'}), 400
-
-        # Save the file in the static/tables folder
-        
 
         # check if there is a record with the same table name in the 'tables' table
         table_exists = TableController.get_table_by_name(table_name)
         if not table_exists:
             # Creating a record of the table info in the 'tables' table
             TableController.add_table_info(table_name, 3, table_structure)
+            if 'file' not in request.files:
+                return jsonify({'error': 'No file part'}), 400
+
+            file = request.files['file']
+
+            uploaded_file_name = file.filename
+            # Check if the uploaded file exists and has a CSV extension
+            if uploaded_file_name == '':
+                return jsonify({'error': 'No selected file or wrong file extension!'}), 400
+            
+            # Save the file in the static/tables folder
+            FileUtilities.save_uploaded_file(3, file)
         else:
             return (jsonify({
                 'error': f'Unable to process request, a table of name {table_name} already'
-                'exists in the database'}),
+                ' exists in the database'}),
                 400)
 
         # TableController.create_table(table_name, table_structure)
