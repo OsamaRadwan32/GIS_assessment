@@ -9,22 +9,32 @@ class TableServices:
     """
     TableUtilities class
     """
+    
     @staticmethod
     def generate_tablename(user_id, table_name):
         """
         Generates a name for the file that is being uploaded to the server side
 
         Args:
-            user_id (int): 
-            table_name (str): 
+            user_id (int): User ID.
+            table_name (str): Table name.
 
         Returns:
-            str: a string in the format of: user_id_table_name
+            str: A string in the format of: id{user_id}_{table_name}.
         """
         return f"id{user_id}_{table_name}"
     
     @staticmethod
     def get_column_type(type):
+        """
+        Get the corresponding database column type for a given structure type.
+
+        Args:
+            type (str): Structure type.
+
+        Returns:
+            str: Database column type.
+        """
         type_mapping = {
             'number': "INTEGER",
             'decimal': "DOUBLE PRECISION",
@@ -39,9 +49,9 @@ class TableServices:
         Adds the info of the new table as a record in the 'tables' table
         
         Parameters:
-        - table_name(text): the name of the new table
-        - user_id(serial): the id of the user
-        - structure(string): the structure of the table to be created (in json format)
+        - table_name (str): The name of the new table.
+        - user_id (int): The ID of the user.
+        - structure (str): The structure of the table to be created (in JSON format).
         """
         table_record = Table(
                             name        = table_name,
@@ -54,14 +64,14 @@ class TableServices:
     @staticmethod
     def check_tablename_record(user_id, table_name):
         """
-        Retrieve a record from the 'tables' table based on the provided name attribute.
+        Check if a record with the provided name and user_id exists in the 'tables' table.
 
         Parameters:
+        - user_id (int): The ID of the user.
         - table_name (str): The name attribute to search for in the 'tables' table.
 
         Returns:
-        - Table or None: If a record with the provided name is found, the corresponding
-        Table object is returned. If no record is found, None is returned.
+        - bool: True if a record with the provided name and user_id exists, False otherwise.
         """
             # Query the 'tables' table to find a record with the provided name
         table_record = Table.query.filter_by(user_id = user_id, name = table_name).first()
@@ -72,13 +82,14 @@ class TableServices:
 
     @staticmethod
     def check_table_exists(table_name):
-        """_summary_
+        """
+        Check if a table with the provided name exists in the database.
 
         Args:
-            table_name (_type_): _description_
+            table_name (str): The name of the table.
 
         Returns:
-            _type_: _description_
+            bool: True if the table exists, False otherwise.
         """
         query  = f"SELECT EXISTS ( "
         query += "SELECT 1 "

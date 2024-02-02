@@ -1,9 +1,7 @@
 """table_controller.py"""
 
-import os
-from flask import Blueprint, jsonify, current_app
+from flask import Blueprint
 from ..config.db_connect import connect_to_db
-from ..models.tables_model import Table
 from ..services.table_services import TableServices
 
 table_bp = Blueprint('table_bp', __name__)
@@ -41,7 +39,6 @@ class TableController:
             data_type = TableController.get_column_type(column['data_type'])
             query += f"{name} {data_type}, "
         query = query.rstrip(', ') + ");"
-        cursor = connect_to_db().cursor()
         cursor.execute(query)
         
         

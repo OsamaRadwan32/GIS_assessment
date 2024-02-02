@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from ..controllers.table_controller import TableController
+from ..services.table_services import TableServices
 
 table_routes = Blueprint('table_routes', __name__)
 
@@ -45,11 +46,11 @@ def delete_table(table_id):
 @table_routes.route('/check_tablename_record/<int:user_id>/<table_name>', methods=['GET'])
 def check_tablename_record(user_id, table_name):
     if request.method == 'GET': 
-        return jsonify({'error': str(TableController.check_tablename_record(user_id, table_name))}), 200
+        return jsonify({'error': str(TableServices.check_tablename_record(user_id, table_name))}), 200
     else: return 'Method is Not Allowed'
     
 @table_routes.route('/check_table_exists/<table_name>', methods=['GET'])
 def check_table_exists(table_name):
     if request.method == 'GET': 
-        return jsonify({'error': str(TableController.check_table_exists(table_name))}), 200 
+        return jsonify({'error': str(TableServices.check_table_exists(table_name))}), 200 
     else: return 'Method is Not Allowed'
