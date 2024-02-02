@@ -12,6 +12,16 @@ class TableController:
     '''Table controller'''
         
     @staticmethod
+    def get_column_type(type):
+        type_mapping = {
+            'number': "INTEGER",
+            'decimal': "DOUBLE PRECISION",
+            'text': "VARCHAR(255)",
+            'date': "DATE",
+        }
+        return type_mapping.get(type, String)
+    
+    @staticmethod
     def add_table_info(table_name, user_id, structure):
         """
         Adds the info of the new table as a record in the 'tables' table
@@ -77,16 +87,6 @@ class TableController:
             return f"Error: {str(e)}"
 
     @staticmethod
-    def get_column_type(type):
-        type_mapping = {
-            'number': "INTEGER",
-            'decimal': "DOUBLE PRECISION",
-            'text': "VARCHAR(255)",
-            'date': "DATE",
-        }
-        return type_mapping.get(type, String)
-
-    @staticmethod
     def create_table_in_db(user_id, table_name, structure):
         """
         Creates a new table in the database given the table_name and structure
@@ -114,7 +114,7 @@ class TableController:
             data_type = TableController.get_column_type(column['data_type'])
             query += f"{name} {data_type}, "
         query = query.rstrip(', ') + ");"
-
+        cursor = connect_to_db().cursor()
         cursor.execute(query)
         
         
