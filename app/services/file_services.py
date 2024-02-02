@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import Flask, jsonify
 from werkzeug.utils import secure_filename
 
-class FileUtilities:
+class FileServices:
     """
     FileUtilities class
     """
@@ -74,9 +74,9 @@ class FileUtilities:
             _type_: _description_
         """
         # Check if the file has an allowed extension
-        if file and FileUtilities.allowed_file_extensions(file.filename):
+        if file and FileServices.allowed_file_extensions(file.filename):
             # Generate a new name for the file to be uploaded on the server
-            upload_file = FileUtilities.generate_filename(user_id, table_name)   
+            upload_file = FileServices.generate_filename(user_id, table_name)   
             # Save the file to the upload folder
             file.save(upload_file)
         else:
