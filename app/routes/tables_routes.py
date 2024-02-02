@@ -40,3 +40,16 @@ def delete_table(table_id):
     # delete_row = content_controller.delete_row(table_id, row_id) 
     # return delete_row
     return jsonify({'message': 'delete_table route', 'table_id': f'{table_id}'})
+
+"""Testing Routes"""
+@table_routes.route('/check_tablename_record/<int:user_id>/<table_name>', methods=['GET'])
+def check_tablename_record(user_id, table_name):
+    if request.method == 'GET': 
+        return jsonify({'error': str(TableController.check_tablename_record(user_id, table_name))}), 200
+    else: return 'Method is Not Allowed'
+    
+@table_routes.route('/check_table_exists/<table_name>', methods=['GET'])
+def check_table_exists(table_name):
+    if request.method == 'GET': 
+        return jsonify({'error': str(TableController.check_table_exists(table_name))}), 200 
+    else: return 'Method is Not Allowed'

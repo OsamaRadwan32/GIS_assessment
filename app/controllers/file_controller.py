@@ -31,7 +31,7 @@ class FileController:
         table_structure = request_form['table_structure']
 
         # check if there is a record with the same table name in the 'tables' table
-        table_exists = TableController.get_table_by_name(table_name)
+        table_exists = TableController.check_tablename_record(table_name)
         if not table_exists:
             # Creating a record of the table info in the 'tables' table
             TableController.add_table_info(table_name, 3, table_structure)

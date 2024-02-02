@@ -22,7 +22,7 @@ def create_app():
     return app
 
 # Connecting to the database without SQLAlchemy
-def db_connection():
+def check_db_connection():
     """
     Connecting to the database
     """

@@ -15,5 +15,5 @@ class TableUtilities:
         Returns:
             str: a string in the format of: user_id_table_name
         """
-        return f"{user_id}_{table_name}"
+        return f"id{user_id}_{table_name}"
 
