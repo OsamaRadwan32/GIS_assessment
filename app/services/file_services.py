@@ -11,13 +11,13 @@ class FileServices:
     """
     def allowed_file_extensions(filename):
         """
-        Check the extension of the file uploaded and mak`es sure its a csv one 
+        Check the extension of the file uploaded and ensures it is a CSV file.
 
         Args:
-            filename (_type_): _description_
+            filename (str): The name of the file.
 
         Returns:
-            _type_: _description_
+            bool: True if the file extension is allowed, False otherwise.
         """
         # Allowed file extensions
         ALLOWED_EXTENSIONS = {'csv'}
@@ -25,14 +25,13 @@ class FileServices:
     
     def generate_filename(table_name):
         """
-        Generates a name for the file that is being uploaded to the server side
+        Generates a name for the file that is being uploaded to the server side.
 
         Args:
-            user_id (int): _description_
-            file_name (str): _description_
+            table_name (str): The name of the table.
 
         Returns:
-            str: a string in the format of: datetime_user_id_original_filename.csv
+            str: A string in the format of: datetime_table_name.csv.
         """
         project_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         tables_folder_path = f'{project_folder_path}/static/tables/'
@@ -48,12 +47,11 @@ class FileServices:
     
     def check_directory_exists(path):
         """
-        Checks if a given path really exists or not
+        Checks if a given path really exists or not.
 
         Args:
-            path (str): the path of the directory to search
+            path (str): The path of the directory to search.
         """
-        
         if os.path.exists(path):
             print(f"The directory '{path}' exists.")
         else:
@@ -62,12 +60,11 @@ class FileServices:
     
     def save_uploaded_file(filename, file):
         """
-        Secures the name of the file and then saves it in the static/tables/ folder
+        Secures the name of the file and then saves it in the static/tables/ folder.
 
         Args:
-            table_name (str): the name of the table to be created
-            user_id (int): the id of the user sending the request
-            file (file): the uploaded file
+            filename (str): The name of the file.
+            file (file): The uploaded file.
 
         Returns:
             _type_: _description_
@@ -77,5 +74,8 @@ class FileServices:
             upload_file = FileServices.generate_filename(filename)   
             # Save the file to the upload folder
             file.save(upload_file)
-        except:
-          return jsonify({'error': 'Error uploading file'}), 400
+        except Exception as e:
+            # Handle the exception and return a custom response
+            error_message = str(e)
+            print(f"Error: {error_message}")
+            return jsonify({'error': 'Error uploading file'}), 400

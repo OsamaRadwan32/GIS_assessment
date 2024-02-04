@@ -12,7 +12,7 @@ class TableController:
     """
 
     @staticmethod
-    def create_table_in_db(user_id, table_name, structure):
+    def create_table_in_db(table_name, structure):
         """
         Creates a new table in the database given the table_name and structure
         
@@ -22,15 +22,6 @@ class TableController:
         """
 
         try:        
-            record = TableServices.check_tablename_record (user_id, table_name)
-            table = TableServices.check_table_exists(table_name)
-
-            # Check if their is a record in the 'Tables' table with the provided 
-            # user_id and table_name
-            # Check if a table with the provided table_name exits in the database 
-            if record or table:
-                return jsonify({"error": "Table already exists in the database. choose another name"}), 500  
-
             # Create a cursor to connect to the database
             cursor = connect_to_db().cursor()
 
