@@ -42,19 +42,26 @@ def delete_table(table_id):
     # return delete_row
     return jsonify({'message': 'delete_table route', 'table_id': f'{table_id}'})
 
-"""Testing Routes"""
+"""
+Testing Routes
+"""
 @table_routes.route('/check_tablename_record/<int:user_id>/<table_name>', methods=['GET'])
 def check_tablename_record(user_id, table_name):
     if request.method == 'GET': 
-        return jsonify({'error': str(TableServices.check_tablename_record(user_id, table_name))}), 200
-    else: return 'Method is Not Allowed'
+        return jsonify({'message': str(TableServices.check_tablename_record(user_id, table_name))}), 200
+    else: return jsonify({'error': 'Method is Not Allowed'}), 400
     
 @table_routes.route('/check_table_exists/<table_name>', methods=['GET'])
 def check_table_exists(table_name):
     if request.method == 'GET': 
-        return jsonify({'error': str(TableServices.check_table_exists(table_name))}), 200 
-    else: return 'Method is Not Allowed'
+        return jsonify({'message': str(TableServices.check_table_exists(table_name))}), 200 
+    else: return jsonify({'error': 'Method is Not Allowed'}), 400
     
 @table_routes.route('/create_table_in_db', methods=['POST'])
-def create_table_in_db(table_name, table_structure):
-    return jsonify({'error': str(TableController.create_table_in_db(table_name, table_structure))}), 200 
+def create_table_in_db():
+    if request.method == 'POST': 
+        request_form = request.form.to_dict()
+        table_name = request_form['table_name']
+        table_structure = request_form['table_structure']
+        return jsonify({'message': str(TableController.create_table_in_db(table_name, table_structure))}), 200 
+    else: return jsonify({'error': 'Method is Not Allowed'}), 400
