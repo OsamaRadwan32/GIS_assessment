@@ -1,6 +1,6 @@
 """table_controller.py"""
 
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from ..config.db_connect import connect_to_db
 from ..services.table_services import TableServices
 
@@ -20,27 +20,35 @@ class TableController:
             table_name(str): the name of the new table
             structure(str): the structure of the table to be created (in json format)
         """
-        
-        # Check if their is a record in the 'Tables' table with the provided 
-        # user_id and table_name
-        TableServices.check_tablename_record(user_id, table_name)
-        
-        # Check if a table with the provided table_name exits in the database 
-        TableServices.check_table_exists(table_name)
 
-        # Create a cursor to connect to the database
-        cursor = connect_to_db().cursor()
+        try:        
+            record = TableServices.check_tablename_record (user_id, table_name)
+            table = TableServices.check_table_exists(table_name)
 
-        # Build the SQL statement to create the table
-        query = f"CREATE TABLE {table_name} ("
-        query += "id SERIAL PRIMARY KEY NOT NULL,"
-        for column in structure:
-            name = column['name']
-            data_type = TableController.get_column_type(column['data_type'])
-            query += f"{name} {data_type}, "
-        query = query.rstrip(', ') + ");"
-        cursor.execute(query)
-        
+            # Check if their is a record in the 'Tables' table with the provided 
+            # user_id and table_name
+            # Check if a table with the provided table_name exits in the database 
+            if record or table:
+                return jsonify({"error": "Table already exists in the database. choose another name"}), 500  
+
+            # Create a cursor to connect to the database
+            cursor = connect_to_db().cursor()
+
+            # Build the SQL statement to create the table
+            query = f"CREATE TABLE {table_name} ("
+            query += "id SERIAL PRIMARY KEY NOT NULL,"
+            for column in structure:
+                name = column['name']
+                data_type = TableServices.get_column_type(column['data_type'])
+                query += f"{name} {data_type}, "
+            query = query.rstrip(', ') + ");"
+            print(query)
+            # cursor.execute(query)
+        except Exception as e:
+            # Handle the exception and return a custom response
+            error_message = str(e)
+            return jsonify({"error": error_message}), 500  
+
         
         
         # print("STRUCTURE TYPE:")

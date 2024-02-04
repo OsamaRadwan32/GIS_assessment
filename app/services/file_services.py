@@ -23,7 +23,7 @@ class FileServices:
         ALLOWED_EXTENSIONS = {'csv'}
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     
-    def generate_filename(user_id, table_name):
+    def generate_filename(table_name):
         """
         Generates a name for the file that is being uploaded to the server side
 
@@ -36,13 +36,12 @@ class FileServices:
         """
         project_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         tables_folder_path = f'{project_folder_path}/static/tables/'
-        print(f"FOLDER PATH: {tables_folder_path}") 
 
         current_datetime = datetime.now()
         
         # Custom format: Year-Month-Day Hour:Minute:Second
         formatted_datetime = current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
-        new_filename = secure_filename(f'{formatted_datetime}_id{user_id}_{table_name}.csv')
+        new_filename = secure_filename(f'{formatted_datetime}_{table_name}.csv')
         print(f"FILE NAME: {new_filename}") 
 
         return os.path.join(tables_folder_path, new_filename)
@@ -61,7 +60,7 @@ class FileServices:
             print(f"The directory '{path}' does not exist.")
         
     
-    def save_uploaded_file(table_name, user_id, file):
+    def save_uploaded_file(filename, file):
         """
         Secures the name of the file and then saves it in the static/tables/ folder
 
@@ -73,12 +72,10 @@ class FileServices:
         Returns:
             _type_: _description_
         """
-        # Check if the file has an allowed extension
-        if file and FileServices.allowed_file_extensions(file.filename):
+        try:
             # Generate a new name for the file to be uploaded on the server
-            upload_file = FileServices.generate_filename(user_id, table_name)   
+            upload_file = FileServices.generate_filename(filename)   
             # Save the file to the upload folder
             file.save(upload_file)
-        else:
-            return jsonify({'error': 'Error uploading file'}), 400
-
+        except:
+          return jsonify({'error': 'Error uploading file'}), 400
