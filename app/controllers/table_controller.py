@@ -24,16 +24,7 @@ class TableController:
         try:        
             # Create a cursor to connect to the database
             cursor = connect_to_db().cursor()
-
-            # Build the SQL statement to create the table
-            query = f"CREATE TABLE {table_name} ("
-            query += "id SERIAL PRIMARY KEY NOT NULL,"
-            for column in structure:
-                name = column['name']
-                data_type = TableServices.get_column_type(column['data_type'])
-                query += f"{name} {data_type}, "
-            query = query.rstrip(', ') + ");"
-            print(query)
+            query = TableServices.construct_create_query(table_name, structure)
             # cursor.execute(query)
         except Exception as e:
             # Handle the exception and return a custom response

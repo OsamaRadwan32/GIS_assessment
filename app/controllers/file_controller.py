@@ -1,7 +1,6 @@
 """ file_controller.py """
 
 import csv
-from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify
 import pandas as pd
 from .. import db
@@ -54,10 +53,12 @@ class FileController:
             # Save the file in the static/tables folder
             FileServices.save_uploaded_file(db_table_name, file)
     
-            TableController.create_table_in_db(db_table_name, table_structure)
+            query = TableController.create_table_in_db(db_table_name, table_structure)
+            return jsonify({"query": str(query)}), 200 
+            
             # FileController.populate_table(table_name, table_structure, file)
 
-            return jsonify({'message': 'Table created and populated successfully'}), 200
+            # return jsonify({'message': 'Table created and populated successfully'}), 200
         except Exception as e:
             # Handle the exception and return a custom response
             error_message = str(e)

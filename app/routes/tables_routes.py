@@ -54,3 +54,7 @@ def check_table_exists(table_name):
     if request.method == 'GET': 
         return jsonify({'error': str(TableServices.check_table_exists(table_name))}), 200 
     else: return 'Method is Not Allowed'
+    
+@table_routes.route('/create_table_in_db', methods=['POST'])
+def create_table_in_db(table_name, table_structure):
+    return jsonify({'error': str(TableController.create_table_in_db(table_name, table_structure))}), 200 

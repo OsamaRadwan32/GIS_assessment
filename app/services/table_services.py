@@ -41,7 +41,7 @@ class TableServices:
             'text': "VARCHAR(255)",
             'date': "DATE",
         }
-        return type_mapping.get(type, String)
+        return type_mapping.get(type)
 
     @staticmethod
     def add_table_info(table_name, user_id, structure):
@@ -99,3 +99,18 @@ class TableServices:
         
         cursor = connect_to_db().cursor()
         return cursor.execute(query)
+
+
+    @staticmethod
+    def construct_create_query(table_name, structure):
+            # Build the SQL statement to create the table
+            query = f"CREATE TABLE {table_name} ("
+            query += "id SERIAL PRIMARY KEY NOT NULL,"
+            for column in structure:
+                name = column['name']
+                data_type = TableServices.get_column_type(column['data_type'])
+                print(f"{data_type}")
+                query += f"{name} {data_type}, "
+            query = query.rstrip(', ') + ");"
+            print(f"QUERY: {query}")
+            return query

@@ -41,7 +41,6 @@ class FileServices:
         # Custom format: Year-Month-Day Hour:Minute:Second
         formatted_datetime = current_datetime.strftime("%Y-%m-%d-%H-%M-%S")
         new_filename = secure_filename(f'{formatted_datetime}_{table_name}.csv')
-        print(f"FILE NAME: {new_filename}") 
 
         return os.path.join(tables_folder_path, new_filename)
     
