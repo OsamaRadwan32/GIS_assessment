@@ -35,26 +35,26 @@ class FileController:
             # check if there is a record with the same table name in the 'tables' table
             # and if their is a table holding the db_table_name existing in the database
             table_record_exists = TableServices.check_tablename_record(3, db_table_name)
-            table_exists = TableServices.check_table_exists(db_table_name)
-            
-            if table_record_exists or table_exists:
-                return jsonify({"error": "Table already exists in the database. choose another name"}), 400  
+            print(f"Table Name Record: {table_record_exists}")
+            # table_exists = TableServices.check_table_exists(db_table_name)
+            # if table_record_exists == "(True,)" or table_exists:
+            #     return jsonify({"error": "Table already exists in the database. Choose another name"}), 400  
 
-            # Creating a record of the table info in the 'tables' table
-            TableServices.add_table_info(db_table_name, 3, table_structure)
+            # # Creating a record of the table info in the 'tables' table
+            # TableServices.add_table_info(db_table_name, 3, table_structure)
             
-            # Check if the uploaded file exists and has a CSV extension
-            file = request.files['file']
-            file_name = file.filename
-            check_filename = FileServices.allowed_file_extensions(file_name)
-            if 'file' not in request.files or not check_filename:
-                return jsonify({'error': 'No selected file or wrong file extension!'}), 400
+            # # Check if the uploaded file exists and has a CSV extension
+            # file = request.files['file']
+            # file_name = file.filename
+            # check_filename = FileServices.allowed_file_extensions(file_name)
+            # if 'file' not in request.files or not check_filename:
+            #     return jsonify({'error': 'No selected file or wrong file extension!'}), 400
                 
-            # Save the file in the static/tables folder
-            FileServices.save_uploaded_file(db_table_name, file)
+            # # Save the file in the static/tables folder
+            # FileServices.save_uploaded_file(db_table_name, file)
     
-            query = TableController.create_table_in_db(db_table_name, table_structure)
-            return jsonify({"query": str(query)}), 200 
+            # query = TableController.create_table_in_db(db_table_name, table_structure)
+            # return jsonify({"query": str(query)}), 200 
             
             # FileController.populate_table(table_name, table_structure, file)
 

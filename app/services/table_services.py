@@ -77,10 +77,12 @@ class TableServices:
         """
             # Query the 'tables' table to find a record with the provided name
         table_record = Table.query.filter_by(user_id = user_id, name = table_name).first()
-
-        # Check if the record exists
-        if table_record:
-            return True
+        print(f"Table Record: {table_record}")
+        print(f"Type of Table Record: {type(table_record)}")
+        return table_record
+        # # Check if the record exists
+        # if table_record:
+        #     return True
 
     @staticmethod
     def check_table_exists(table_name):
@@ -97,12 +99,14 @@ class TableServices:
         query += "SELECT 1 "
         query += "FROM information_schema.tables "
         query += f"WHERE table_name = '{table_name}' );"
-        print(f'Query: {query}')
-        cursor = connect_to_db().cursor()
-        value = cursor.execute(query)
-        print(f'Value: {value}') 
-        return cursor.execute(query)
-
+        connection = connect_to_db()
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchone()
+        connection.commit()
+        if result == "(True,)":
+            return True
+        else: return False
 
     @staticmethod
     def construct_create_query(table_name, structure):

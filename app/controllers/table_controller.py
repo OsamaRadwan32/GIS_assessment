@@ -23,7 +23,8 @@ class TableController:
 
         try:        
             # Create a cursor to connect to the database
-            cursor = connect_to_db().cursor()
+            connection = connect_to_db()
+            cursor = connection.cursor()
             query = TableServices.construct_create_query(table_name, structure)
             # cursor.execute(query)
         except Exception as e:
