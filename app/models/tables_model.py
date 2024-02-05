@@ -20,15 +20,16 @@ class Table(db.Model):
     __tablename__ = 'tables'
 
     # Auto Generated Fields:
-    id           = db.Column(db.Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
-    created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           
-    updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)
+    id              = db.Column(db.Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
+    created         = db.Column(db.DateTime(timezone=True), default=datetime.now)                           
+    updated         = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)
 
     # Input by User Fields:
-    name         = db.Column(db.String(100), nullable=False, unique=True)
-    user_id      = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    structure    = db.Column(JSONB, nullable=False)
-    user         = db.relationship('User', backref='users', lazy=True)
+    name            = db.Column(db.String(100), nullable=False, unique=True)
+    user_id         = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    structure       = db.Column(JSONB, nullable=False)
+    user            = db.relationship('User', backref='users', lazy=True)
+    reference_file  = db.Column(db.String(100), nullable=True, unique=True)
 
 
     # Validations => https://flask-validator.readthedocs.io/en/latest/index.html

@@ -77,12 +77,10 @@ class TableServices:
         """
             # Query the 'tables' table to find a record with the provided name
         table_record = Table.query.filter_by(user_id = user_id, name = table_name).first()
-        print(f"Table Record: {table_record}")
-        print(f"Type of Table Record: {type(table_record)}")
-        return table_record
-        # # Check if the record exists
-        # if table_record:
-        #     return True
+        # Check if the record exists
+        if table_record:
+            return True
+        else: return False
 
     @staticmethod
     def check_table_exists(table_name):

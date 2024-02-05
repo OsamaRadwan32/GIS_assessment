@@ -21,5 +21,6 @@ CREATE TABLE IF NOT EXISTS tables (
     updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     name VARCHAR(100) UNIQUE NOT NULL,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    structure JSONB
+    structure JSONB,
+    reference_file VARCHAR(100) UNIQUE
 );

@@ -73,6 +73,7 @@ class FileServices:
             upload_file = FileServices.generate_filename(filename)   
             # Save the file to the upload folder
             file.save(upload_file)
+            return upload_file
         except Exception as e:
             # Handle the exception and return a custom response
             error_message = str(e)
