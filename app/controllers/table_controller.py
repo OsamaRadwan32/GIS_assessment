@@ -29,10 +29,9 @@ class TableController:
             print(f"Executing query: {query}")
             cursor.execute(query)
             # Check if the query executed successfully (cursor.execute() returns None)
-            if cursor.rowcount == -1:
+            if cursor.rowcount != -1:
                 # If rowcount is -1, it means the query was successfully executed
-                connection.commit()
-                return jsonify({"message": "Table created successfully"})
+                return jsonify({"error": "Error creating table"})
             connection.commit()
             TableServices.check_table_exists(table_name)
         except Exception as e:
