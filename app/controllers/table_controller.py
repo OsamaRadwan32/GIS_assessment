@@ -1,5 +1,8 @@
 """table_controller.py"""
 
+import csv
+import pandas as pd
+from .. import db
 from flask import Blueprint, jsonify
 from ..config.db_connect import connect_to_db
 from ..services.table_services import TableServices
@@ -69,4 +72,33 @@ class TableController:
         # except Exception as e:
         #     return jsonify({'error': str(e)}), 500
 
+    @staticmethod
+    def populate_table(table_name, table_structure, csv_file):
+        """
+        Adds two numbers and returns the result.
 
+        Parameters:
+            a (int): The first number.
+            b (int): The second number.
+
+        Returns:
+            int: The sum of a and b.
+        """        
+        table_model = db.Model.metadata.tables.get(table_name)
+        
+        if not table_model:
+            return jsonify({"error": "Table does not exist"}), 404
+
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.DictReader(file)
+            data = [{col: row[col] for col in columns} for row in csv_reader]
+
+            try:
+                db.session.execute(YourTable.insert().values(data))
+                db.session.commit()
+                return jsonify({"message": f"Data inserted into the table '{table_name}' successfully"})
+            except Exception as e:
+                db.session.rollback()
+                return jsonify({"message": f"Failed to insert CSV data: {str(e)}"}), 500
+            finally:
+                db.session.close()

@@ -1,9 +1,6 @@
 """ file_controller.py """
 
-import csv
-from flask import Flask, request, jsonify
-import pandas as pd
-from .. import db
+from flask import jsonify
 from ..models.dynamic_table_model import DynamicTable
 from .table_controller import TableController
 from ..services.table_services import TableServices
@@ -52,44 +49,13 @@ class FileController:
             upload_file = FileServices.save_uploaded_file(db_table_name, file)
             # Creating a record of the table info in the 'tables' table
             TableServices.add_table_info(db_table_name, 3, table_structure, upload_file[64:])                
-            TableController.create_table_in_db(db_table_name, table_structure)
-            # return jsonify({"query": str(query)}), 200 
-            
-            # FileController.populate_table(table_name, table_structure, file)
-            # return jsonify({'message': 'Table created and populated successfully'}), 200
+            TableController.create_table_in_db(db_table_name, table_structure)            
+            FileController.populate_table(table_name, table_structure, file)
+            return jsonify({'message': 'Table created and populated successfully'}), 200
         except Exception as e:
             # Handle the exception and return a custom response
             error_message = str(e)
             return jsonify({"error": error_message}), 500  
         
-    @staticmethod
-    def populate_table(table_name, table_structure, csv_file):
-        """
-        Adds two numbers and returns the result.
-
-        Parameters:
-            a (int): The first number.
-            b (int): The second number.
-
-        Returns:
-            int: The sum of a and b.
-        """        
-        table_model = db.Model.metadata.tables.get(table_name)
-        
-        if not table_model:
-            return jsonify({"error": "Table does not exist"}), 404
-
-        with open(csv_file, 'r') as file:
-            csv_reader = csv.DictReader(file)
-            data = [{col: row[col] for col in columns} for row in csv_reader]
-
-            try:
-                db.session.execute(YourTable.insert().values(data))
-                db.session.commit()
-                return jsonify({"message": f"Data inserted into the table '{table_name}' successfully"})
-            except Exception as e:
-                db.session.rollback()
-                return jsonify({"message": f"Failed to insert CSV data: {str(e)}"}), 500
-            finally:
-                db.session.close()
+    
 

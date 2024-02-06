@@ -65,3 +65,13 @@ def create_table_in_db():
         table_structure = request_form['table_structure']
         return jsonify({'message': str(TableController.create_table_in_db(table_name, table_structure))}), 200 
     else: return jsonify({'error': 'Method is Not Allowed'}), 400
+
+@table_routes.route('/populate_table', methods=['POST'])
+def populate_table():
+    if request.method == 'POST': 
+        request_form = request.form.to_dict()
+        table_name = request_form['table_name']
+        table_structure = request_form['table_structure']
+        csv_file_name = request_form['csv_file_name']
+        return TableController.populate_table(table_name, table_structure, csv_file_name) 
+    else: return jsonify({'error': 'Method is Not Allowed'}), 400
