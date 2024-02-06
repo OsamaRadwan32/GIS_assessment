@@ -46,7 +46,7 @@ class TableServices:
         return type_mapping.get(type)
 
     @staticmethod
-    def add_table_info(table_name, user_id, structure):
+    def add_table_info(table_name, user_id, structure, reference_file):
         """
         Adds the info of the new table as a record in the 'tables' table
         
@@ -56,9 +56,10 @@ class TableServices:
         - structure (str): The structure of the table to be created (in JSON format).
         """
         table_record = Table(
-                            name        = table_name,
-                            user_id     = user_id,
-                            structure   = structure
+                            name            = table_name,
+                            user_id         = user_id,
+                            structure       = structure,
+                            reference_file  = reference_file
                             )
         db.session.add(table_record)
         db.session.commit()
@@ -112,13 +113,12 @@ class TableServices:
         structure_dict = json.loads(structure)
         # Build the SQL statement to create the table
         query = f"CREATE TABLE {table_name} ("
-        query += " 'id' SERIAL PRIMARY KEY NOT NULL, "
+        query += " id SERIAL PRIMARY KEY NOT NULL, "
         for column in structure_dict:
             name = column['name']
             data_type = TableServices.get_column_type(column['data_type'])
             if data_type:
-                query += f"'{name}' {data_type}, "
+                query += f"{name} {data_type}, "
             else: return jsonify({'error': 'wrong datatypes provided'}), 400
         query = query.rstrip(', ') + ");"
-        print(f"QUERY: {query}")
         return query

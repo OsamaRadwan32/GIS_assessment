@@ -36,6 +36,8 @@ class FileController:
             # and if their is a table holding the db_table_name existing in the database
             table_record_exists = TableServices.check_tablename_record(3, db_table_name)
             table_exists = TableServices.check_table_exists(db_table_name)
+            # print(f"{table_record_exists}")
+            # print(f"{table_exists}")
             if table_record_exists or table_exists:
                 return jsonify({"error": "Table already exists in the database. Choose another name"}), 400  
 
@@ -49,9 +51,9 @@ class FileController:
             # Generate a file name and save the file in the static/tables folder
             upload_file = FileServices.save_uploaded_file(db_table_name, file)
             # Creating a record of the table info in the 'tables' table
-            TableServices.add_table_info(db_table_name, 3, table_structure)                
-            query = TableController.create_table_in_db(db_table_name, table_structure)
-            return jsonify({"query": str(query)}), 200 
+            TableServices.add_table_info(db_table_name, 3, table_structure, upload_file[64:])                
+            TableController.create_table_in_db(db_table_name, table_structure)
+            # return jsonify({"query": str(query)}), 200 
             
             # FileController.populate_table(table_name, table_structure, file)
             # return jsonify({'message': 'Table created and populated successfully'}), 200
