@@ -1,9 +1,12 @@
 """table_controller.py"""
 
 import csv
+import json
 import pandas as pd
-from .. import db
+from sqlalchemy import Table, MetaData, create_engine
+from sqlalchemy.orm import sessionmaker
 from flask import Blueprint, jsonify
+from .. import db
 from ..config.db_connect import connect_to_db
 from ..services.table_services import TableServices
 
@@ -84,21 +87,108 @@ class TableController:
         Returns:
             int: The sum of a and b.
         """        
+        # Check if the table exists
         table_model = db.Model.metadata.tables.get(table_name)
-        
         if not table_model:
             return jsonify({"error": "Table does not exist"}), 404
 
-        with open(csv_file, 'r') as file:
-            csv_reader = csv.DictReader(file)
-            data = [{col: row[col] for col in columns} for row in csv_reader]
+        try:
+            # Parse table structure from JSON string
+            columns = json.loads(table_structure)
 
-            try:
-                db.session.execute(YourTable.insert().values(data))
-                db.session.commit()
-                return jsonify({"message": f"Data inserted into the table '{table_name}' successfully"})
-            except Exception as e:
-                db.session.rollback()
-                return jsonify({"message": f"Failed to insert CSV data: {str(e)}"}), 500
-            finally:
-                db.session.close()
+            # Open the CSV file
+            with open(csv_file, 'r') as file:
+                reader = csv.DictReader(file)
+
+                # Iterate over rows in the CSV file
+                for row in reader:
+                    # Create a dictionary to store column values
+                    column_values = {}
+
+                    # Iterate over columns in the table structure
+                    for column in columns:
+                        # Get the value from the CSV row corresponding to the column name
+                        value = row.get(column)
+
+                        # Add the column name and value to the dictionary
+                        column_values[column] = value
+
+                    # Create a new record in the table using SQLAlchemy
+                    new_record = Table(**column_values)
+                    db.session.add(new_record)
+
+            # Commit the transaction
+            db.session.commit()
+
+            return jsonify({"message": f"Data added to table {table_name} successfully."}), 200
+        except Exception as e:
+            # Handle the exception and log or print an error message
+            error_message = str(e)
+            print(f"Error: {error_message}")
+
+            # Rollback the transaction
+            db.session.rollback()
+
+            return jsonify({"error": error_message}), 500
+        
+    @staticmethod
+    def populate_table(table_name, table_structure, csv_file):
+        """
+        Add data from CSV file to the specified table using SQLAlchemy and PostgreSQL.
+
+        Parameters:
+            table_name (str): Name of the table to add data to.
+            table_structure (str): JSON string containing the table structure (column names).
+            csv_file (str): Path to the CSV file containing data.
+            db_uri (str): Database URI for SQLAlchemy to connect to.
+
+        Returns:
+            str: Message indicating success or failure.
+        """
+        try:
+            # Parse table structure from JSON string
+            columns = json.loads(table_structure)
+
+            # Create SQLAlchemy table object dynamically
+            metadata = MetaData()
+            table = Table(table_name, metadata, *[Column(column, String) for column in columns])
+
+            # Create SQLAlchemy engine and session
+            engine = create_engine(db_uri)
+            Session = sessionmaker(bind=engine)
+            session = Session()
+
+            # Open the CSV file
+            with open(csv_file, 'r') as file:
+                reader = csv.DictReader(file)
+
+                # Iterate over rows in the CSV file
+                for row in reader:
+                    # Create a dictionary to store column values
+                    column_values = {}
+
+                    # Iterate over columns in the table structure
+                    for column in columns:
+                        # Get the value from the CSV row corresponding to the column name
+                        value = row.get(column)
+
+                        # Add the column name and value to the dictionary
+                        column_values[column] = value
+
+                    # Insert data into the table
+                    session.execute(table.insert().values(**column_values))
+
+            # Commit the transaction
+            session.commit()
+
+            return jsonify({"message": f"Data added to table {table_name} successfully."}), 200
+
+        except Exception as e:
+            # Handle the exception and log or print an error message
+            error_message = str(e)
+            print(f"Error: {error_message}")
+
+            # Rollback the transaction
+            session.rollback()
+
+            return jsonify({"error": error_message}), 500

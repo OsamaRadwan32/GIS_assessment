@@ -109,7 +109,7 @@ class TableServices:
 
     @staticmethod
     def construct_create_query(table_name, structure):
-        # convert the structure string into a dictionary
+        # Parse table structure from JSON string
         structure_dict = json.loads(structure)
         # Build the SQL statement to create the table
         query = f"CREATE TABLE {table_name} ("
