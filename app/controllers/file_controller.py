@@ -1,7 +1,7 @@
 """ file_controller.py """
 
 from flask import jsonify
-from ..models.dynamic_table_model import DynamicTable
+# from ..models.dynamic_table_model import DynamicTable
 from .table_controller import TableController
 from ..services.table_services import TableServices
 from ..services.file_services import FileServices
@@ -50,12 +50,9 @@ class FileController:
             # Creating a record of the table info in the 'tables' table
             TableServices.add_table_info(db_table_name, 3, table_structure, upload_file[64:])                
             TableController.create_table_in_db(db_table_name, table_structure)            
-            FileController.populate_table(table_name, table_structure, file)
+            TableController.populate_table(table_name, table_structure, file)
             return jsonify({'message': 'Table created and populated successfully'}), 200
         except Exception as e:
             # Handle the exception and return a custom response
             error_message = str(e)
             return jsonify({"error": error_message}), 500  
-        
-    
-

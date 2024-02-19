@@ -1,7 +1,6 @@
 """table_utilities.py"""
 
-import os
-import json
+import os, json, csv
 from flask import jsonify
 from .. import db
 from ..models.tables_model import Table
@@ -122,3 +121,51 @@ class TableServices:
             else: return jsonify({'error': 'wrong datatypes provided'}), 400
         query = query.rstrip(', ') + ");"
         return query
+    
+    # 
+    # 
+    # 
+    @staticmethod
+    def construct_insert_query(table_name, structure, data):
+        # Parse table structure from JSON string
+        structure_dict = json.loads(structure)
+        # Build the INSERT query
+        query = f"INSERT INTO {table_name} ("
+        for column in structure_dict:
+            name = column['name']
+            query += f"{name}, "
+        query = query.rstrip(', ')
+        for row in data:
+            values = ', '.join([f"'{value}'" for value in row])
+            query += f" VALUES ({values});"
+        query = query.rstrip(', ') + ");"
+        return query
+
+    @staticmethod
+    def convert_csv_content_into_tuples(file_path):
+        data = []
+        with open(file_path, 'r') as file:
+            for line in file:
+                # Split each line by comma delimiter
+                parts = line.strip().split(',')
+                # Construct a tuple with the values
+                data.append((parts[0], parts[1]))
+        return data
+
+    @staticmethod
+    def execute_query(query):
+        try:
+            # Create a cursor to connect to the database
+            connection = connect_to_db()
+            cursor = connection.cursor()
+            print(f"Executing query: {query}")
+            cursor.execute(query)
+            # Check if the query executed successfully (cursor.execute() returns None)
+            if cursor.rowcount != -1:
+                # If rowcount is -1, it means the query was successfully executed
+                return jsonify({"error": "Error creating table"})
+            connection.commit()
+        except Exception as e:
+            # Handle the exception and return a custom response
+            error_message = str(e)
+            return jsonify({"error": error_message}), 500  
