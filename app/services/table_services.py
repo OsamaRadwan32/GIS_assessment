@@ -1,6 +1,7 @@
 """table_utilities.py"""
 
 import os, json, csv
+import psycopg2
 from flask import jsonify
 from .. import db
 from ..models.tables_model import Table
@@ -8,7 +9,7 @@ from ..config.db_connect import connect_to_db
 
 class TableServices:
     """
-    TableUtilities class
+    Table services class
     """
     
     @staticmethod
@@ -124,7 +125,8 @@ class TableServices:
     
     # 
     # 
-    # 
+    #
+
     @staticmethod
     def construct_insert_query(table_name, structure, data):
         # Parse table structure from JSON string
@@ -135,10 +137,11 @@ class TableServices:
             name = column['name']
             query += f"{name}, "
         query = query.rstrip(', ')
+        query += ") VALUES"
         for row in data:
             values = ', '.join([f"'{value}'" for value in row])
-            query += f" VALUES ({values});"
-        query = query.rstrip(', ') + ");"
+            query += f" ({values}),"
+        query = query.rstrip(',') + ";"
         return query
 
     @staticmethod
@@ -158,14 +161,19 @@ class TableServices:
             # Create a cursor to connect to the database
             connection = connect_to_db()
             cursor = connection.cursor()
-            print(f"Executing query: {query}")
+            print(f"Executing Query: {query}")
             cursor.execute(query)
+            connection.commit()
             # Check if the query executed successfully (cursor.execute() returns None)
             if cursor.rowcount != -1:
                 # If rowcount is -1, it means the query was successfully executed
                 return jsonify({"error": "Error creating table"})
-            connection.commit()
-        except Exception as e:
-            # Handle the exception and return a custom response
+            cursor.close()
+            connection.close()
+            # If no exceptions were raised, the query syntax is valid
+            return True, None
+        except psycopg2.Error as e:
+            # If an exception occurred, handle it and return an error message
             error_message = str(e)
-            return jsonify({"error": error_message}), 500  
+            return False, error_message
+

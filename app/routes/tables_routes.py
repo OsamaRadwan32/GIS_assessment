@@ -72,6 +72,6 @@ def populate_table():
         request_form = request.form.to_dict()
         table_name = request_form['table_name']
         table_structure = request_form['table_structure']
-        csv_file_name = request_form['csv_file_name']
-        return TableController.populate_table(table_name, table_structure, csv_file_name) 
+        csv_file = request_form['csv_file']
+        return TableController.populate_table(table_name, table_structure, csv_file) 
     else: return jsonify({'error': 'Method is Not Allowed'}), 400
