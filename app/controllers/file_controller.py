@@ -20,7 +20,7 @@ class FileController:
                 - table_name (str): the name of the table to create.
                 - table_structure (json): the table structure in json format.
                 - file_name (str): the name of the uploaded file.
-                - file(file): the actual uploaded file.
+                - file(file): the actual up loaded file.
         """
         request_form = request.form.to_dict()
         table_name = request_form['table_name']
